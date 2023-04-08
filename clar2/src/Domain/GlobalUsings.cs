@@ -1,0 +1,1 @@
+﻿global using clar2.Domain.Common;
