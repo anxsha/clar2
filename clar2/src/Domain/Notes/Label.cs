@@ -1,5 +1,12 @@
 namespace clar2.Domain.Notes;
 
-public class Label : BaseEntity {
-  public required string Name { get; set; }
+public class Label : ValueObject {
+  public string Name { get; private set; }
+  public Label(string name) {
+    Name = name;
+  }
+
+  protected override IEnumerable<object> GetEqualityComponents() {
+    yield return Name;
+  }
 }

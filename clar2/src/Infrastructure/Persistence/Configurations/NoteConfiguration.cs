@@ -1,8 +1,9 @@
 using clar2.Domain.Notes;
+using clar2.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace clar2.Infrastructure.Persistence.Configurations; 
+namespace clar2.Infrastructure.Persistence.Configurations;
 
 public class NoteConfiguration : IEntityTypeConfiguration<Note> {
   public void Configure(EntityTypeBuilder<Note> builder) {
@@ -18,6 +19,8 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note> {
       .HasDefaultValue(false);
 
     builder.OwnsMany(n => n.Pictures);
+    builder.OwnsMany(n => n.Labels);
 
+    builder.HasOne<User>().WithMany().HasForeignKey(n => n.OwnerId);
   }
 }
