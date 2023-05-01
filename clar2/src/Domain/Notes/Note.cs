@@ -1,5 +1,6 @@
 ﻿using clar2.Domain.Common.Interfaces;
 using clar2.Domain.Notes.Enums;
+using clar2.Domain.Notes.Events;
 using clar2.Domain.Users;
 
 namespace clar2.Domain.Notes;
@@ -61,5 +62,14 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
 
   public void RemoveLabel() {
     //todo
+  }
+
+  public void Archive() {
+    if (IsArchived) {
+      return;
+    }
+
+    IsArchived = true;
+    AddDomainEvent(new NoteArchivedEvent(this));
   }
 }
