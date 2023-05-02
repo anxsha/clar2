@@ -2,7 +2,9 @@
 using AutoMapper;
 using clar2.Application.Common.Mappings;
 using clar2.Application.Common.Models;
+using clar2.Application.Notes.Queries;
 using clar2.Application.TodoLists.Queries.GetTodos;
+using clar2.Domain.Notes;
 using clar2.Domain.ToDoItems;
 using clar2.Domain.TodoLists;
 using NUnit.Framework;
@@ -30,6 +32,7 @@ public class MappingTests {
   [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
   [TestCase(typeof(TodoList), typeof(LookupDto))]
   [TestCase(typeof(TodoItem), typeof(LookupDto))]
+  [TestCase(typeof(Note), typeof(AuthoredNoteBriefDto))]
   public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination) {
     var instance = GetInstanceOf(source);
 
