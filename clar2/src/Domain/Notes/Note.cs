@@ -1,7 +1,6 @@
 ﻿using clar2.Domain.Common.Interfaces;
 using clar2.Domain.Notes.Enums;
 using clar2.Domain.Notes.Events;
-using clar2.Domain.Users;
 
 namespace clar2.Domain.Notes;
 
@@ -10,38 +9,38 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
   public string Content { get; private set; }
   public NoteBackground Background { get; private set; }
   public List<NotePicture> Pictures { get; private set; } = new();
-  public int OwnerId { get; private set; }
+  public string OwnerId { get; private set; }
   public List<NoteCollaborator> Collaborators { get; private set; } = new();
   public List<Label> Labels { get; private set; } = new();
   public bool IsArchived { get; private set; }
 
-  public Note(string title, string content, User owner, NoteBackground background = NoteBackground.Default) {
+  public Note(string title, string content, string ownerId, NoteBackground background = NoteBackground.Default) {
     Title = title;
     Content = content;
     Background = background;
-    OwnerId = owner.Id;
+    OwnerId = ownerId;
     IsArchived = false;
   }
 
-  public void AddCollaborator(User collaborator, CollaboratorPermissions permissions = CollaboratorPermissions.Read) {
-    if (collaborator.Id == OwnerId) {
-      throw new ArgumentException("Cannot add the owner as a collaborator.", nameof(collaborator));
+  public void AddCollaborator(string collaboratorId, CollaboratorPermissions permissions = CollaboratorPermissions.Read) {
+    if (collaboratorId == OwnerId) {
+      throw new ArgumentException("Cannot add the owner as a collaborator.", nameof(collaboratorId));
     }
     // If that user is already a collaborator, just change their permissions to the new ones
-    NoteCollaborator? noteCollaborator = Collaborators.FirstOrDefault(c => c.CollaboratorId == collaborator.Id);
+    NoteCollaborator? noteCollaborator = Collaborators.FirstOrDefault(c => c.CollaboratorId == collaboratorId);
     if (noteCollaborator is not null) {
       noteCollaborator.ChangeCollaboratorPermissions(permissions);
     } else {
       Collaborators.Add(new NoteCollaborator( 
-        collaborator,
-        this,
+        collaboratorId,
+        this.Id,
         permissions
       ));
     }
   }
   
-  public void RemoveCollaborator(User collaborator) {
-    NoteCollaborator? noteCollaborator = Collaborators.FirstOrDefault(c => c.CollaboratorId == collaborator.Id);
+  public void RemoveCollaborator(string collaboratorId) {
+    NoteCollaborator? noteCollaborator = Collaborators.FirstOrDefault(c => c.CollaboratorId == collaboratorId);
     if (noteCollaborator is not null) {
       Collaborators.Remove(noteCollaborator);
     }
@@ -56,12 +55,16 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
     //todo
   }
 
-  public void AddLabel() {
-    //todo
+  public void AddLabel(string labelText) {
+    if (Labels.Any(l => l.Name == labelText)) {
+      return;
+    }
+    var label = new Label(labelText);
+    Labels.Add(label);
   }
 
-  public void RemoveLabel() {
-    //todo
+  public void RemoveLabel(string labelText) {
+    Labels.RemoveAll(l => l.Name == labelText);
   }
 
   public void Archive() {

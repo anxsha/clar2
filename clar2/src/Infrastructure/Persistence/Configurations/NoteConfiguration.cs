@@ -1,5 +1,5 @@
+using clar2.Domain;
 using clar2.Domain.Notes;
-using clar2.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,9 +18,12 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note> {
       .IsRequired()
       .HasDefaultValue(false);
 
+    builder.OwnsMany(n => n.Labels)
+      .Property(l => l.Name)
+      .IsRequired()
+      .HasMaxLength(40);
     builder.OwnsMany(n => n.Pictures);
-    builder.OwnsMany(n => n.Labels);
 
-    builder.HasOne<User>().WithMany().HasForeignKey(n => n.OwnerId);
+    builder.HasOne<ApplicationUser>().WithMany().HasForeignKey(n => n.OwnerId);
   }
 }
