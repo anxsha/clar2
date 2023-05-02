@@ -1,4 +1,5 @@
-﻿using clar2.Domain.ToDoItems;
+﻿using clar2.Domain;
+using clar2.Domain.ToDoItems;
 using clar2.Domain.TodoLists;
 using clar2.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;

@@ -1,5 +1,6 @@
 ﻿using clar2.Application.Common.Interfaces;
 using clar2.Application.Common.Models;
+using clar2.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,5 @@
 ﻿using clar2.Application.Common.Interfaces;
+using clar2.Domain;
 using clar2.Infrastructure.Files;
 using clar2.Infrastructure.Identity;
 using clar2.Infrastructure.Persistence;
@@ -8,8 +9,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace clar2.Infrastructure;
 
 public static class ConfigureServices {
   public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,

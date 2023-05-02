@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using clar2.Application.Common.Interfaces;
+using clar2.Domain;
 using clar2.Domain.Notes;
 using clar2.Domain.ToDoItems;
 using clar2.Domain.TodoLists;
-using clar2.Domain.Users;
 using clar2.Infrastructure.Identity;
 using clar2.Infrastructure.Persistence.Interceptors;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -38,7 +38,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
   
   public DbSet<Label> Labels => Set<Label>();
   
-  public new DbSet<User> Users => Set<User>();
+  public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
 
   protected override void OnModelCreating(ModelBuilder builder) {
     builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

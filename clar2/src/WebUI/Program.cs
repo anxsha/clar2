@@ -1,3 +1,4 @@
+using clar2.Infrastructure;
 using clar2.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
