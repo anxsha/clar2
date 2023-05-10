@@ -3,6 +3,7 @@ using AutoMapper;
 using clar2.Application.Common.Mappings;
 using clar2.Application.Common.Models;
 using clar2.Application.Notes.Queries;
+using clar2.Application.Notes.Queries.GetCollaboratedNotesWithPagination;
 using clar2.Application.TodoLists.Queries.GetTodos;
 using clar2.Domain.Notes;
 using clar2.Domain.ToDoItems;
@@ -33,6 +34,7 @@ public class MappingTests {
   [TestCase(typeof(TodoList), typeof(LookupDto))]
   [TestCase(typeof(TodoItem), typeof(LookupDto))]
   [TestCase(typeof(Note), typeof(AuthoredNoteBriefDto))]
+  [TestCase(typeof(Note), typeof(CollaboratedNoteBriefDto))]
   public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination) {
     var instance = GetInstanceOf(source);
 

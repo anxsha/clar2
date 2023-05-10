@@ -11,7 +11,7 @@ public class AuthoredNoteBriefDto : IMapFrom<Note> {
   public NoteBackground Background { get; set; }
   public List<string> Labels { get; set; } = new();
 
-  public void Mapping(Profile profile) {
+  public virtual void Mapping(Profile profile) {
     profile.CreateMap<Note, AuthoredNoteBriefDto>()
       .ForMember(d => d.Labels,
         opt => opt.MapFrom(
