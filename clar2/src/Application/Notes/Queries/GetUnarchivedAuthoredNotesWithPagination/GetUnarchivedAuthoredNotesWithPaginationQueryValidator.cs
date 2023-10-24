@@ -4,7 +4,7 @@ namespace clar2.Application.Notes.Queries.GetUnarchivedAuthoredNotesWithPaginati
 
 public class
   GetUnarchivedAuthoredNotesWithPaginationQueryValidator : AbstractValidator<
-    GetUnarchivedAuthoredNotesWithPagination.GetUnarchivedAuthoredNotesWithPaginationQuery> {
+    GetUnarchivedAuthoredNotesWithPaginationQuery> {
   public GetUnarchivedAuthoredNotesWithPaginationQueryValidator() {
     RuleFor(x => x.PageNumber)
       .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");
