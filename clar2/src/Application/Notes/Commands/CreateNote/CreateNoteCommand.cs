@@ -7,7 +7,7 @@ using MediatR;
 namespace clar2.Application.Notes.Commands.CreateNote;
 
 public record CreateNoteCommand
-  (string Title, string Content, string UserId, NoteBackground Background) : IRequest<int> { }
+  (string Title, string Content, string UserId, NoteBackground Background = NoteBackground.Default) : IRequest<int> { }
 
 public class CreateNoteCommandHandler : IRequestHandler<CreateNoteCommand, int> {
   private readonly IApplicationDbContext _context;

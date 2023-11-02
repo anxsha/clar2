@@ -7,7 +7,7 @@ using MediatR;
 namespace clar2.Application.Notes.Commands.EditNote;
 
 public record EditNoteCommand
-  (string NoteId, string Title, string Content, string UserId) : IRequest { }
+  (int NoteId, string Title, string Content, string UserId) : IRequest { }
 
 public class EditNoteCommandHandler : IRequestHandler<EditNoteCommand> {
   private readonly IApplicationDbContext _context;

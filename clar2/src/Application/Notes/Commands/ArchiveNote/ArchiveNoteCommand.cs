@@ -7,7 +7,7 @@ using MediatR;
 namespace clar2.Application.Notes.Commands.ArchiveNote;
 
 public record ArchiveNoteCommand
-  (string NoteId, string UserId) : IRequest { }
+  (int NoteId, string UserId) : IRequest { }
 
 public class ArchiveNoteCommandHandler : IRequestHandler<ArchiveNoteCommand> {
   private readonly IApplicationDbContext _context;

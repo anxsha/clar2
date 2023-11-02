@@ -7,7 +7,7 @@ using MediatR;
 namespace clar2.Application.Notes.Commands.DeleteNote;
 
 public record DeleteNoteCommand
-  (string NoteId, string UserId) : IRequest { }
+  (int NoteId, string UserId) : IRequest { }
 
 public class DeleteNoteCommandHandler : IRequestHandler<DeleteNoteCommand> {
   private readonly IApplicationDbContext _context;
