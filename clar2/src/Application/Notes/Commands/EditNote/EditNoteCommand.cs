@@ -3,6 +3,7 @@ using clar2.Application.Common.Interfaces;
 using clar2.Domain.Notes;
 using clar2.Domain.Notes.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace clar2.Application.Notes.Commands.EditNote;
 
@@ -18,7 +19,8 @@ public class EditNoteCommandHandler : IRequestHandler<EditNoteCommand> {
 
   public async Task<Unit> Handle(EditNoteCommand request, CancellationToken cancellationToken) {
     var entity = await _context.Notes
-      .FindAsync(new object[] {request.NoteId}, cancellationToken);
+      .Include(n => n.Collaborators)
+      .FirstOrDefaultAsync(n => n.Id == request.NoteId, cancellationToken);
 
     if (entity is null) {
       throw new NotFoundException(nameof(Note), request.NoteId);
