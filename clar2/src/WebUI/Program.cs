@@ -1,5 +1,6 @@
 using clar2.Infrastructure;
 using clar2.Infrastructure.Persistence;
+using WebUI;
 
 var builder = WebApplication.CreateBuilder(args);
 

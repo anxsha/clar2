@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace WebUI;
 
 public static class ConfigureServices {
   public static IServiceCollection AddWebUIServices(this IServiceCollection services) {
