@@ -1,22 +1,30 @@
 using neatbook.Domain.Notes;
 using neatbook.Domain.Notes.Enums;
 
-namespace neatbook.Application.Notes.Queries.GetCollaboratedNotesWithPagination; 
+namespace neatbook.Application.Notes.Queries.GetCollaboratedNotesWithPagination;
 
-public class CollaboratedNoteBriefDto : AuthoredNoteBriefDto {
+public class CollaboratedNoteBriefDto {
+  public string Title { get; set; }
+  public string Content { get; set; }
+  public NoteBackground Background { get; set; }
   public bool IsArchived { get; set; }
+  public List<string> Labels { get; set; } = new();
+  public CollaboratorPermissions Permissions { get; set; }
 
-  public CollaboratorPermissions Permissions => _collaborators
-    .Where(c => c.CollaboratorId == CurrentUserId)
-    .Select(p => p.Permissions).FirstOrDefault();
-  public string CurrentUserId { get; set; }
-  private List<NoteCollaborator> _collaborators = new();
-  
-  public override void Mapping(Profile profile) {
-    profile.CreateMap<Note, CollaboratedNoteBriefDto>()
-      .IncludeBase<Note, AuthoredNoteBriefDto>()
-      .ForMember(d => d._collaborators,
-        opt => opt.MapFrom(
-          s => s.Collaborators));
+  public static CollaboratedNoteBriefDto MapFromNote(Note note, string currentUserId) {
+    var dto = new CollaboratedNoteBriefDto(note.Title, note.Content, note.Background, note.IsArchived) {
+      Labels = note.Labels.Select(l => l.Name).ToList(),
+      Permissions = note.Collaborators
+        .Where(c => c.CollaboratorId == currentUserId)
+        .Select(p => p.Permissions).FirstOrDefault()
+    };
+    return dto;
+  }
+
+  private CollaboratedNoteBriefDto(string title, string content, NoteBackground background, bool isArchived) {
+    Title = title;
+    Content = content;
+    Background = background;
+    IsArchived = isArchived;
   }
 }

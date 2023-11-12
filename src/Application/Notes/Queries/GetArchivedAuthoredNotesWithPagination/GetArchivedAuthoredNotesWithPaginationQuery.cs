@@ -2,7 +2,7 @@ using neatbook.Application.Common.Interfaces;
 using neatbook.Application.Common.Mappings;
 using neatbook.Application.Common.Models;
 
-namespace neatbook.Application.Notes.Queries.GetArchivedAuthoredNotesWithPagination; 
+namespace neatbook.Application.Notes.Queries.GetArchivedAuthoredNotesWithPagination;
 
 public sealed record GetArchivedAuthoredNotesWithPaginationQuery
   (string UserId, int PageNumber = 1, int PageSize = 10) : IRequest<PaginatedList<AuthoredNoteBriefDto>>;
@@ -17,12 +17,13 @@ public class
     _context = context;
     _mapper = mapper;
   }
-  
-  public async Task<PaginatedList<AuthoredNoteBriefDto>> Handle(GetArchivedAuthoredNotesWithPaginationQuery request, CancellationToken cancellationToken) {
+
+  public async Task<PaginatedList<AuthoredNoteBriefDto>> Handle(GetArchivedAuthoredNotesWithPaginationQuery request,
+    CancellationToken cancellationToken) {
     return await _context.Notes
       .Where(n => n.OwnerId == request.UserId && n.IsArchived == true)
       .OrderByDescending(n => n.LastModified)
-      .ProjectTo<AuthoredNoteBriefDto>(_mapper.ConfigurationProvider)
+      .Select(n => AuthoredNoteBriefDto.MapFromNote(n))
       .PaginatedListAsync(request.PageNumber, request.PageSize);
   }
 }
