@@ -6,7 +6,272 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/TodoItems": {
+    "/api/notes": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "GetUnarchivedAuthoredNotes",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfAuthoredNoteBriefDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "CreateNote",
+        "requestBody": {
+          "x-name": "req",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNoteRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/notes/archived": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "GetArchivedAuthoredNotes",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfAuthoredNoteBriefDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/notes/collaborated": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "GetCollaboratedNotes",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfCollaboratedNoteBriefDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/notes/{id}/archive": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "ArchiveNote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/notes/{id}": {
+      "delete": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "DeleteNote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "EditNote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "req",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditNoteRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/todo-items": {
       "get": {
         "tags": [
           "TodoItems"
@@ -100,7 +365,7 @@
         ]
       }
     },
-    "/api/TodoItems/{id}": {
+    "/api/todo-items/{id}": {
       "put": {
         "tags": [
           "TodoItems"
@@ -171,7 +436,7 @@
         ]
       }
     },
-    "/api/TodoItems/UpdateDetail/{id}": {
+    "/api/todo-items/UpdateDetail/{id}": {
       "put": {
         "tags": [
           "TodoItems"
@@ -214,7 +479,7 @@
         ]
       }
     },
-    "/api/TodoLists": {
+    "/api/todo-lists": {
       "get": {
         "tags": [
           "TodoLists"
@@ -276,7 +541,7 @@
         ]
       }
     },
-    "/api/TodoLists/{id}": {
+    "/api/todo-lists/{id}": {
       "put": {
         "tags": [
           "TodoLists"
@@ -347,7 +612,7 @@
         ]
       }
     },
-    "/api/Users/register": {
+    "/api/users/register": {
       "post": {
         "tags": [
           "Users"
@@ -382,7 +647,7 @@
         }
       }
     },
-    "/api/Users/login": {
+    "/api/users/login": {
       "post": {
         "tags": [
           "Users"
@@ -434,7 +699,7 @@
         }
       }
     },
-    "/api/Users/refresh": {
+    "/api/users/refresh": {
       "post": {
         "tags": [
           "Users"
@@ -466,7 +731,7 @@
         }
       }
     },
-    "/api/Users/confirmEmail": {
+    "/api/users/confirmEmail": {
       "get": {
         "tags": [
           "Users"
@@ -508,7 +773,7 @@
         }
       }
     },
-    "/api/Users/resendConfirmationEmail": {
+    "/api/users/resendConfirmationEmail": {
       "post": {
         "tags": [
           "Users"
@@ -533,7 +798,7 @@
         }
       }
     },
-    "/api/Users/forgotPassword": {
+    "/api/users/forgotPassword": {
       "post": {
         "tags": [
           "Users"
@@ -568,7 +833,7 @@
         }
       }
     },
-    "/api/Users/resetPassword": {
+    "/api/users/resetPassword": {
       "post": {
         "tags": [
           "Users"
@@ -603,7 +868,7 @@
         }
       }
     },
-    "/api/Users/manage/2fa": {
+    "/api/users/manage/2fa": {
       "post": {
         "tags": [
           "Users"
@@ -653,7 +918,7 @@
         ]
       }
     },
-    "/api/Users/manage/info": {
+    "/api/users/manage/info": {
       "get": {
         "tags": [
           "Users"
@@ -739,7 +1004,7 @@
         ]
       }
     },
-    "/api/WeatherForecasts": {
+    "/api/weather-forecasts": {
       "get": {
         "tags": [
           "WeatherForecasts"
@@ -770,6 +1035,179 @@
   },
   "components": {
     "schemas": {
+      "PaginatedListOfAuthoredNoteBriefDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthoredNoteBriefDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AuthoredNoteBriefDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "background": {
+            "$ref": "#/components/schemas/NoteBackground"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NoteBackground": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Default",
+          "Red",
+          "Blue",
+          "Green",
+          "IslandImage"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "PaginatedListOfCollaboratedNoteBriefDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollaboratedNoteBriefDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CollaboratedNoteBriefDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "background": {
+            "$ref": "#/components/schemas/NoteBackground"
+          },
+          "isArchived": {
+            "type": "boolean"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/CollaboratorPermissions"
+          }
+        }
+      },
+      "CollaboratorPermissions": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Read",
+          "ReadWrite"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "CreateNoteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          }
+        }
+      },
+      "EditNoteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
       "PaginatedListOfTodoItemBriefDto": {
         "type": "object",
         "additionalProperties": false,

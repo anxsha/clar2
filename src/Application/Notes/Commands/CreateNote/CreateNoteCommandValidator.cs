@@ -7,8 +7,6 @@ public class CreateNoteCommandValidator : AbstractValidator<CreateNoteCommand> {
       .NotEmpty();
     RuleFor(v => v.Content)
       .NotEmpty();
-    RuleFor(v => v.Background)
-      .NotEmpty();
     RuleFor(v => v.UserId)
       .NotEmpty();
   }
