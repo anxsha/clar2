@@ -1,5 +1,4 @@
-﻿using neatbook.Domain.Entities;
-
+﻿
 namespace neatbook.Application.Common.Models;
 
 public class LookupDto
@@ -12,8 +11,8 @@ public class LookupDto
     {
         public Mapping()
         {
-            CreateMap<TodoList, LookupDto>();
-            CreateMap<TodoItem, LookupDto>();
+            // CreateMap<TodoList, LookupDto>();
+            // CreateMap<TodoItem, LookupDto>();
         }
     }
 }
