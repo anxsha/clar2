@@ -1,12 +1,11 @@
 namespace neatbook.Domain.Notes; 
 
-public class NotePicture : ValueObject {
+public class NotePicture : BaseAuditableEntity {
   public string Url { get; private set; }
+  public int NoteId { get; private set; }
 
-  public NotePicture(string url) {
+  public NotePicture(string url, int noteId) {
     Url = url;
-  }
-  protected override IEnumerable<object> GetEqualityComponents() {
-    yield return Url;
+    NoteId = noteId;
   }
 }

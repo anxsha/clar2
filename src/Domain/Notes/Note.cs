@@ -2,7 +2,7 @@ using neatbook.Domain.Common.Interfaces;
 using neatbook.Domain.Notes.Enums;
 using neatbook.Domain.Notes.Events;
 
-namespace neatbook.Domain.Notes; 
+namespace neatbook.Domain.Notes;
 
 public class Note : BaseAuditableEntity, IAggregateRoot {
   public string Title { get; private set; }
@@ -13,6 +13,8 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
   public List<NoteCollaborator> Collaborators { get; private set; } = new();
   public List<Label> Labels { get; private set; } = new();
   public bool IsArchived { get; private set; }
+
+  private const int MaxPicturesCount = 3;
 
   public Note(string title, string content, string ownerId, NoteBackground background = NoteBackground.Default) {
     Title = title;
@@ -66,13 +68,21 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
     Content = content;
   }
 
-  public void AddPicture() {
-    //todo
-    // Pictures.Add(new NotePicture(""));
+  public bool AddPicture(string url) {
+    if (Pictures.Count >= MaxPicturesCount) {
+      return false;
+    }
+
+    Pictures.Add(new NotePicture(url, this.Id));
+    return true;
   }
 
-  public void RemovePicture() {
-    //todo
+  public bool RemovePicture(int id) {
+    if (Pictures.RemoveAll(p => p.Id == id) > 0) {
+      return true;
+    }
+
+    return false;
   }
 
   public void AddLabel(string labelText) {
@@ -97,4 +107,3 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
     AddDomainEvent(new NoteArchivedEvent(this));
   }
 }
-

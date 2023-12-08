@@ -1,5 +1,6 @@
 ﻿using neatbook.Application.Common.Interfaces;
 using neatbook.Application.Common.Models;
+using neatbook.Application.Notes.Commands.AddNotePicture;
 using neatbook.Application.Notes.Commands.ArchiveNote;
 using neatbook.Application.Notes.Commands.CreateNote;
 using neatbook.Application.Notes.Commands.DeleteNote;
@@ -9,6 +10,7 @@ using neatbook.Application.Notes.Queries.GetArchivedAuthoredNotesWithPagination;
 using neatbook.Application.Notes.Queries.GetCollaboratedNotesWithPagination;
 using neatbook.Application.Notes.Queries.GetUnarchivedAuthoredNotesWithPagination;
 using neatbook.Domain.Notes.Enums;
+using neatbook.Web.Endpoints.RequestValidators;
 using neatbook.Web.Services;
 
 namespace neatbook.Web.Endpoints;
@@ -22,9 +24,13 @@ public class Notes : EndpointGroupBase {
       .MapGet(GetCollaboratedNotes, "collaborated")
       .MapPut(ArchiveNote, "{id}/archive")
       .MapPost(CreateNote)
+      .MapPost(AddNotePicture, "{id}/pictures", true)
       .MapDelete(DeleteNote, "{id}")
       .MapPut(EditNote, "{id}");
   }
+
+  private const int MaxNotePictureSize = 1024 * 1024 * 5; // 5MB
+  private const string NotePicturesDirectory = "uploads/note-pictures"; // relative to wwwroot
 
   public async Task<PaginatedList<AuthoredNoteBriefDto>> GetUnarchivedAuthoredNotes(ISender sender, IUser user,
     [AsParameters] RequestWithPagination req) {
@@ -69,6 +75,35 @@ public class Notes : EndpointGroupBase {
 
   public async Task<IResult> EditNote(ISender sender, IUser user, int id, EditNoteRequest req) {
     await sender.Send(new EditNoteCommand(id, req.Title, req.Content, user.Id!));
+    return Results.NoContent();
+  }
+
+  public async Task<IResult> AddNotePicture(ISender sender, IWebHostEnvironment environment, IUser user, int id,
+    IFormFile file) {
+    // check file's size and extension
+    if (!file.IsValidImage(MaxNotePictureSize)) {
+      return Results.BadRequest(
+        $"File is not a valid image or is too large. Supported formats: gif, png, jpeg, jpg. " +
+        $"Maximum file size: {MaxNotePictureSize / 1024.0 / 1024.0} MB.");
+    }
+
+    var extension = Path.GetExtension(file.FileName);
+    // generate unique filename
+    var fileName = $"{Guid.NewGuid().ToString()}{extension}";
+    var filePath = Path.Combine(environment.WebRootPath, NotePicturesDirectory, fileName);
+
+    var pictureAdded =
+      await sender.Send(new AddNotePictureCommand(id, $"{NotePicturesDirectory}/{fileName}", user.Id!));
+
+    if (!pictureAdded) {
+      return Results.BadRequest();
+    }
+
+    // save file to disk
+    await using (var fileStream = new FileStream(filePath, FileMode.Create)) {
+      await file.CopyToAsync(fileStream);
+    }
+
     return Results.NoContent();
   }
 

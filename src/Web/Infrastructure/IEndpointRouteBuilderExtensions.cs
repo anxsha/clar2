@@ -12,12 +12,19 @@ public static class IEndpointRouteBuilderExtensions
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, string pattern = "")
+    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, string pattern = "",
+      bool disableAntiForgery = false)
     {
         Guard.Against.AnonymousMethod(handler);
 
-        builder.MapPost(pattern, handler)
+        if (disableAntiForgery) {
+          builder.MapPost(pattern, handler)
+            .WithName(handler.Method.Name)
+            .DisableAntiforgery();
+        } else {
+          builder.MapPost(pattern, handler)
             .WithName(handler.Method.Name);
+        }
 
         return builder;
     }

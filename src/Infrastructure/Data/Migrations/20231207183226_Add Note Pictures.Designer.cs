@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using neatbook.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using neatbook.Infrastructure.Data;
 namespace neatbook.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231207183226_Add Note Pictures")]
+    partial class AddNotePictures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -316,6 +319,9 @@ namespace neatbook.Infrastructure.Data.Migrations
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("NoteId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -323,6 +329,8 @@ namespace neatbook.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NoteId");
+
+                    b.HasIndex("NoteId1");
 
                     b.ToTable("NotePicture");
                 });
@@ -425,10 +433,14 @@ namespace neatbook.Infrastructure.Data.Migrations
             modelBuilder.Entity("neatbook.Domain.Notes.NotePicture", b =>
                 {
                     b.HasOne("neatbook.Domain.Notes.Note", null)
-                        .WithMany("Pictures")
+                        .WithMany()
                         .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("neatbook.Domain.Notes.Note", null)
+                        .WithMany("Pictures")
+                        .HasForeignKey("NoteId1");
                 });
 
             modelBuilder.Entity("neatbook.Domain.Notes.Note", b =>

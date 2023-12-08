@@ -22,7 +22,6 @@ public class NoteConfiguration : IEntityTypeConfiguration<Note> {
       .Property(l => l.Name)
       .IsRequired()
       .HasMaxLength(40);
-    builder.OwnsMany(n => n.Pictures);
 
     builder.HasOne<ApplicationUser>().WithMany().HasForeignKey(n => n.OwnerId);
   }
