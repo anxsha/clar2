@@ -32,7 +32,7 @@ public class SqlServerTestDatabase : ITestDatabase
         _connection = new SqlConnection(_connectionString);
 
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(_connectionString)
+            .UseSqlServer(_connectionString, builder => builder.EnableRetryOnFailure())
             .Options;
 
         var context = new ApplicationDbContext(options);
