@@ -106,4 +106,13 @@ public class Note : BaseAuditableEntity, IAggregateRoot {
     IsArchived = true;
     AddDomainEvent(new NoteArchivedEvent(this));
   }
+
+  public void Unarchive() {
+    if (!IsArchived) {
+      return;
+    }
+
+    IsArchived = false;
+    AddDomainEvent(new NoteUnarchivedEvent(this));
+  }
 }

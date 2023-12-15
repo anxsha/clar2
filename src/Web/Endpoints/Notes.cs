@@ -5,6 +5,7 @@ using neatbook.Application.Notes.Commands.ArchiveNote;
 using neatbook.Application.Notes.Commands.CreateNote;
 using neatbook.Application.Notes.Commands.DeleteNote;
 using neatbook.Application.Notes.Commands.EditNote;
+using neatbook.Application.Notes.Commands.UnarchiveNote;
 using neatbook.Application.Notes.Queries;
 using neatbook.Application.Notes.Queries.GetArchivedAuthoredNotesWithPagination;
 using neatbook.Application.Notes.Queries.GetCollaboratedNotesWithPagination;
@@ -25,8 +26,10 @@ public class Notes : EndpointGroupBase {
       .MapPut(ArchiveNote, "{id}/archive")
       .MapPost(CreateNote)
       .MapPost(AddNotePicture, "{id}/pictures", true)
-      .MapDelete(DeleteNote, "{id}")
-      .MapPut(EditNote, "{id}");
+      .MapPut(ArchiveNote, "{id}/archive")
+      .MapPut(UnarchiveNote, "{id}/unarchive")
+      .MapPut(EditNote, "{id}")
+      .MapDelete(DeleteNote, "{id}");
   }
 
   private const int MaxNotePictureSize = 1024 * 1024 * 5; // 5MB
@@ -104,6 +107,11 @@ public class Notes : EndpointGroupBase {
       await file.CopyToAsync(fileStream);
     }
 
+    return Results.NoContent();
+  }
+
+  public async Task<IResult> UnarchiveNote(ISender sender, IUser user, int id) {
+    await sender.Send(new UnarchiveNoteCommand(id, user.Id!));
     return Results.NoContent();
   }
 
