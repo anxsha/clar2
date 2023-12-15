@@ -30,7 +30,7 @@ public class Notes : EndpointGroupBase {
   }
 
   private const int MaxNotePictureSize = 1024 * 1024 * 5; // 5MB
-  private const string NotePicturesDirectory = "uploads/note-pictures"; // relative to wwwroot
+  private const string NotePicturesDirectory = "Files/uploads/note-pictures"; // relative to ContentRootPath
 
   public async Task<PaginatedList<AuthoredNoteBriefDto>> GetUnarchivedAuthoredNotes(ISender sender, IUser user,
     [AsParameters] RequestWithPagination req) {
@@ -90,7 +90,7 @@ public class Notes : EndpointGroupBase {
     var extension = Path.GetExtension(file.FileName);
     // generate unique filename
     var fileName = $"{Guid.NewGuid().ToString()}{extension}";
-    var filePath = Path.Combine(environment.WebRootPath, NotePicturesDirectory, fileName);
+    var filePath = Path.Combine(environment.ContentRootPath, NotePicturesDirectory, fileName);
 
     var pictureAdded =
       await sender.Send(new AddNotePictureCommand(id, $"{NotePicturesDirectory}/{fileName}", user.Id!));

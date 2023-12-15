@@ -35,7 +35,7 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\uploads\note-pictures\" />
+    <Folder Include="Files\uploads\note-pictures\" />
   </ItemGroup>
 
   <!-- Auto-generated Open API specification and Angular TypeScript clients -->
