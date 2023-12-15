@@ -9,6 +9,7 @@ using neatbook.Application.Notes.Commands.UnarchiveNote;
 using neatbook.Application.Notes.Queries;
 using neatbook.Application.Notes.Queries.GetArchivedAuthoredNotesWithPagination;
 using neatbook.Application.Notes.Queries.GetCollaboratedNotesWithPagination;
+using neatbook.Application.Notes.Queries.GetNoteById;
 using neatbook.Application.Notes.Queries.GetUnarchivedAuthoredNotesWithPagination;
 using neatbook.Domain.Notes.Enums;
 using neatbook.Web.Endpoints.RequestValidators;
@@ -23,7 +24,7 @@ public class Notes : EndpointGroupBase {
       .MapGet(GetUnarchivedAuthoredNotes)
       .MapGet(GetArchivedAuthoredNotes, "archived")
       .MapGet(GetCollaboratedNotes, "collaborated")
-      .MapPut(ArchiveNote, "{id}/archive")
+      .MapGet(GetNoteById, "{id}")
       .MapPost(CreateNote)
       .MapPost(AddNotePicture, "{id}/pictures", true)
       .MapPut(ArchiveNote, "{id}/archive")
@@ -115,10 +116,37 @@ public class Notes : EndpointGroupBase {
     return Results.NoContent();
   }
 
+  public async Task<IResult> GetNoteById(ISender sender, IUser user, int id, IWebHostEnvironment environment) {
+    var note = await sender.Send(new GetNoteByIdQuery(id, user.Id!));
+
+    List<NotePictureVm> pictures = [];
+
+    // load image files from disk
+    foreach (var picture in note.Pictures) {
+      var filePath = Path.Combine(environment.ContentRootPath, picture.Url);
+      var extension = Path.GetExtension(filePath);
+      try {
+        var fileBytes = await File.ReadAllBytesAsync(filePath);
+        var fileBase64 = Convert.ToBase64String(fileBytes);
+        pictures.Add(new NotePictureVm(picture.Id, $"data:image/{extension};base64,{fileBase64}"));
+      } catch (IOException) {
+        // file not found => use an empty image placeholder
+        pictures.Add(new NotePictureVm(picture.Id,
+          "data:image/svg+xml;charset=utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E"));
+      }
+    }
+
+    return Results.Ok(new GetNoteByIdResponse(note, pictures));
+  }
+
 
   public record struct RequestWithPagination(int PageNumber = 1, int PageSize = 10);
 
   public record struct CreateNoteRequest(string Title, string Content, string Background);
 
   public record struct EditNoteRequest(string Title, string Content);
+
+  public record struct GetNoteByIdResponse(NoteDto Note, List<NotePictureVm> Pictures);
+
+  public record struct NotePictureVm(int Id, string FileData) { }
 }

@@ -170,12 +170,81 @@
         ]
       }
     },
-    "/api/notes/{id}/archive": {
+    "/api/notes/{id}": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "GetNoteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
       "put": {
         "tags": [
           "Notes"
         ],
-        "operationId": "ArchiveNote",
+        "operationId": "EditNote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "req",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditNoteRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Notes"
+        ],
+        "operationId": "DeleteNote",
         "parameters": [
           {
             "name": "id",
@@ -246,12 +315,12 @@
         ]
       }
     },
-    "/api/notes/{id}": {
-      "delete": {
+    "/api/notes/{id}/archive": {
+      "put": {
         "tags": [
           "Notes"
         ],
-        "operationId": "DeleteNote",
+        "operationId": "ArchiveNote",
         "parameters": [
           {
             "name": "id",
@@ -274,12 +343,14 @@
             "JWT": []
           }
         ]
-      },
+      }
+    },
+    "/api/notes/{id}/unarchive": {
       "put": {
         "tags": [
           "Notes"
         ],
-        "operationId": "EditNote",
+        "operationId": "UnarchiveNote",
         "parameters": [
           {
             "name": "id",
@@ -292,19 +363,6 @@
             "x-position": 1
           }
         ],
-        "requestBody": {
-          "x-name": "req",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditNoteRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
         "responses": {
           "200": {
             "description": ""
