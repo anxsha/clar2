@@ -137,6 +137,10 @@ public partial class Testing
 
         return await context.Set<TEntity>().CountAsync();
     }
+    
+    public static IServiceScopeFactory GetScopeFactory() {
+      return _scopeFactory;
+    }
 
     [OneTimeTearDown]
     public async Task RunAfterAnyTests()
