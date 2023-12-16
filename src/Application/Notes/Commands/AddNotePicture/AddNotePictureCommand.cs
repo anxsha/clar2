@@ -21,7 +21,7 @@ public class AddNotePictureCommandHandler : IRequestHandler<AddNotePictureComman
     Guard.Against.NotFound(request.NoteId, entity);
     
     if (!entity.UserCanEdit(request.UserId)) {
-      return false;
+      throw new NotFoundException(request.NoteId.ToString(), nameof(entity));
     }
 
     var pictureAdded = entity.AddPicture(request.pictureUrl);

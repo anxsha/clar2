@@ -55,7 +55,12 @@ public class Notes : EndpointGroupBase {
   }
 
   public async Task<IResult> ArchiveNote(ISender sender, IUser user, int id) {
-    await sender.Send(new ArchiveNoteCommand(id, user.Id!));
+    try {
+      await sender.Send(new ArchiveNoteCommand(id, user.Id!));
+    } catch (NotFoundException) {
+      return Results.NotFound();
+    }
+
     return Results.NoContent();
   }
 
@@ -73,12 +78,22 @@ public class Notes : EndpointGroupBase {
   }
 
   public async Task<IResult> DeleteNote(ISender sender, IUser user, int id) {
-    await sender.Send(new DeleteNoteCommand(id, user.Id!));
+    try {
+      await sender.Send(new DeleteNoteCommand(id, user.Id!));
+    } catch (NotFoundException) {
+      return Results.NotFound();
+    }
+
     return Results.NoContent();
   }
 
   public async Task<IResult> EditNote(ISender sender, IUser user, int id, EditNoteRequest req) {
-    await sender.Send(new EditNoteCommand(id, req.Title, req.Content, user.Id!));
+    try {
+      await sender.Send(new EditNoteCommand(id, req.Title, req.Content, user.Id!));
+    } catch (NotFoundException) {
+      return Results.NotFound();
+    }
+
     return Results.NoContent();
   }
 
@@ -96,11 +111,15 @@ public class Notes : EndpointGroupBase {
     var fileName = $"{Guid.NewGuid().ToString()}{extension}";
     var filePath = Path.Combine(environment.ContentRootPath, NotePicturesDirectory, fileName);
 
-    var pictureAdded =
-      await sender.Send(new AddNotePictureCommand(id, $"{NotePicturesDirectory}/{fileName}", user.Id!));
-
-    if (!pictureAdded) {
-      return Results.BadRequest();
+    try {
+      var pictureAdded =
+        await sender.Send(new AddNotePictureCommand(id, $"{NotePicturesDirectory}/{fileName}", user.Id!));
+      if (!pictureAdded) {
+        // User was authorized and eligible, but e.g. the max number of pictures had been reached for that note
+        return Results.BadRequest();
+      }
+    } catch (NotFoundException) {
+      return Results.NotFound();
     }
 
     // save file to disk
@@ -112,12 +131,22 @@ public class Notes : EndpointGroupBase {
   }
 
   public async Task<IResult> UnarchiveNote(ISender sender, IUser user, int id) {
-    await sender.Send(new UnarchiveNoteCommand(id, user.Id!));
+    try {
+      await sender.Send(new UnarchiveNoteCommand(id, user.Id!));
+    } catch (NotFoundException) {
+      return Results.NotFound();
+    }
+
     return Results.NoContent();
   }
 
   public async Task<IResult> GetNoteById(ISender sender, IUser user, int id, IWebHostEnvironment environment) {
-    var note = await sender.Send(new GetNoteByIdQuery(id, user.Id!));
+    NoteDto note;
+    try {
+      note = await sender.Send(new GetNoteByIdQuery(id, user.Id!));
+    } catch (NotFoundException) {
+      return Results.NotFound();
+    }
 
     List<NotePictureVm> pictures = [];
 

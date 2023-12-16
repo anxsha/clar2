@@ -20,7 +20,7 @@ public class ArchiveNoteCommandHandler : IRequestHandler<ArchiveNoteCommand> {
     Guard.Against.NotFound(request.NoteId, entity);
     
     if (entity.OwnerId != request.UserId) {
-      return;
+      throw new NotFoundException(request.NoteId.ToString(), nameof(entity));
     }
 
     entity.Archive();

@@ -22,7 +22,7 @@ public class EditNoteCommandHandler : IRequestHandler<EditNoteCommand> {
     Guard.Against.NotFound(request.NoteId, entity);
     
     if (!entity.UserCanEdit(request.UserId)) {
-      return;
+      throw new NotFoundException(request.NoteId.ToString(), nameof(entity));
     }
 
     entity.Modify(request.Title, request.Content);

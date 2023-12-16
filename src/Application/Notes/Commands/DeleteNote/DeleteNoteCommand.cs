@@ -1,5 +1,4 @@
 using neatbook.Application.Common.Interfaces;
-using neatbook.Domain.Notes;
 using neatbook.Domain.Notes.Events;
 
 namespace neatbook.Application.Notes.Commands.DeleteNote; 
@@ -21,7 +20,7 @@ public class DeleteNoteCommandHandler : IRequestHandler<DeleteNoteCommand> {
     Guard.Against.NotFound(request.NoteId, entity);
 
     if (entity.OwnerId != request.UserId) {
-      return;
+      throw new NotFoundException(request.NoteId.ToString(), nameof(entity));
     }
 
     _context.Notes.Remove(entity);
